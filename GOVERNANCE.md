@@ -1,6 +1,6 @@
 # Governance
 
-`cloud-itonami-6629` is an OSS open-business blueprint for outsourced claims-administration services, average adjusting (marine cargo and vessel damage apportionment), and other activities auxiliary to insurance and pension funding.
+`cloud-itonami-isic-6629` is an OSS open-business blueprint for outsourced claims-administration services, average adjusting (marine cargo and vessel damage apportionment), and other activities auxiliary to insurance and pension funding.
 Governance covers both the capability layer and the operator model.
 
 ## Maintainers

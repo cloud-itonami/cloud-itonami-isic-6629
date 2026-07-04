@@ -1,4 +1,4 @@
-{:itonami.blueprint/id "cloud-itonami-6629"
+{:itonami.blueprint/id "cloud-itonami-isic-6629"
  :itonami.blueprint/name "Other activities auxiliary to insurance and pension funding"
  :itonami.blueprint/isic-rev5 "6629"
  :itonami.blueprint/domain :insurance/auxiliary

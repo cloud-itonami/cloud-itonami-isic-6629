@@ -1,4 +1,4 @@
-# cloud-itonami-6629
+# cloud-itonami-isic-6629
 
 Open Business Blueprint for **ISIC Rev.5 6629**: Other activities auxiliary to insurance and pension funding.
 

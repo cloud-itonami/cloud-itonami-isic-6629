@@ -2,7 +2,7 @@
 
 ## Classification
 
-- Repository: `cloud-itonami-6629`
+- Repository: `cloud-itonami-isic-6629`
 - ISIC Rev.5: `6629`
 - Activity: outsourced claims-administration services, average adjusting (marine cargo and vessel damage apportionment), and other activities auxiliary to insurance and pension funding
 - Social impact: financial inclusion, data sovereignty, transparent audit
