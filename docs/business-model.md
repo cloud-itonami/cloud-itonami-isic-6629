@@ -31,7 +31,12 @@
 
 ## Trust Controls
 
-- no claims-administration recommendation or average adjustment is finalized without human sign-off
-- a fabricated apportionment forces a hold, not an override
-- every recommendation path is auditable
+- no claims-administration recommendation or average adjustment is
+  finalized without human sign-off
+- a fabricated jurisdiction licensing/methodology citation, an
+  unsupported claims-administration recommendation (required evidence
+  not on file), or a general-average apportionment whose claimed
+  per-interest shares do not match this vehicle's own independent
+  pro-rata recompute -- each forces a hold, not an override
+- every intake, assessment and finalization path is auditable
 - emergency manual override paths remain outside LLM control
