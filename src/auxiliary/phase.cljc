@@ -22,7 +22,16 @@
   high-stakes gate enforces the same invariant independently -- two
   layers, not one, agree on this. `:case/intake` moves no capital or
   liability (governed by its own HARD checks in `auxiliary.governor`,
-  but never `high-stakes`), so it IS auto-eligible at phase 3.")
+  but never `high-stakes`), so it IS auto-eligible at phase 3.
+
+  The decision core is delegated to the safety kernel
+  `auxiliary.kernels.gate` (integer-coded, fail-closed, safe-kotoba
+  subset); this namespace keeps the human-readable phase table (the
+  documentation and structural-invariant tests read it) and does the
+  keyword<->wire-code mapping at the boundary. The kernel's own battery
+  and the parity matrix in `auxiliary.kernels.gate-test` pin the two
+  representations together."
+  (:require [auxiliary.kernels.gate :as kernel]))
 
 (def read-ops  #{})
 (def write-ops #{:case/intake :jurisdiction/assess :recommendation/finalize})
@@ -41,6 +50,31 @@
 
 (def default-phase 3)
 
+;; ---- kernel wire-code bridges (façade-side, not kernel vocabulary) ----
+
+(defn- op->code
+  "Kernel op wire code. This repo's `read-ops` is empty, so 0 (read) is
+  never produced here — kept for the fleet-wide wire contract. Unknown
+  ops map to 4 (unknown write) — the kernel never write-enables it, so
+  an unrecognized op fails closed to HOLD exactly as the old
+  set-membership logic did."
+  [op]
+  (cond
+    (contains? read-ops op)            0
+    (= op :case/intake)                1
+    (= op :jurisdiction/assess)        2
+    (= op :recommendation/finalize)    3
+    :else                              4))
+
+(defn- disposition->code [d]
+  (cond (= d :commit) 0 (= d :escalate) 1 (= d :hold) 2 :else 2))
+
+(defn- code->disposition [c]
+  (if (= c 0) :commit (if (= c 1) :escalate :hold)))
+
+(defn- code->reason [c]
+  (if (= c 1) :phase-disabled (if (= c 2) :phase-approval nil)))
+
 (defn gate
   "Adjust a governor disposition for the rollout phase. Returns
   {:disposition kw :reason kw|nil}.
@@ -53,14 +87,13 @@
     it always escalates once the governor clears it (or holds if the
     governor doesn't)."
   [phase {:keys [op]} governor-disposition]
-  (let [{:keys [writes auto]} (get phases phase (get phases default-phase))]
-    (cond
-      (= :hold governor-disposition)       {:disposition :hold :reason nil}
-      (contains? read-ops op)              {:disposition governor-disposition :reason nil}
-      (not (contains? writes op))          {:disposition :hold :reason :phase-disabled}
-      (and (= :commit governor-disposition)
-           (not (contains? auto op)))      {:disposition :escalate :reason :phase-approval}
-      :else                                {:disposition governor-disposition :reason nil})))
+  (let [p (if (contains? phases phase) phase default-phase)
+        op-code (op->code op)
+        gov-code (disposition->code governor-disposition)
+        d (kernel/phase-disposition p op-code gov-code)
+        r (kernel/phase-reason p op-code gov-code)]
+    {:disposition (code->disposition d)
+     :reason (code->reason r)}))
 
 (defn verdict->disposition
   "Map an Insurance Auxiliary Governor verdict to a base disposition
