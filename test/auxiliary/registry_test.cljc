@@ -24,9 +24,9 @@
       (is (close? 600000.0 (reduce + (map :contribution result)))))))
 
 (deftest apportion-general-average-validation-rules
-  (is (thrown? Exception (r/apportion-general-average [] 600000)))
-  (is (thrown? Exception (r/apportion-general-average interests-fixture -1)))
-  (is (thrown? Exception (r/apportion-general-average [{:party "x" :value-at-risk 0}] 600000))))
+  (is (thrown? #?(:clj Exception :cljs js/Error) (r/apportion-general-average [] 600000)))
+  (is (thrown? #?(:clj Exception :cljs js/Error) (r/apportion-general-average interests-fixture -1)))
+  (is (thrown? #?(:clj Exception :cljs js/Error) (r/apportion-general-average [{:party "x" :value-at-risk 0}] 600000))))
 
 ;; ----------------------------- register-claims-recommendation -----------------------------
 
@@ -43,10 +43,10 @@
     (is (= (get-in result ["record" "kind"]) "claims-recommendation-draft"))))
 
 (deftest claims-recommendation-validation-rules
-  (is (thrown? Exception (r/register-claims-recommendation "" 15000 "JPN" 1)))
-  (is (thrown? Exception (r/register-claims-recommendation "TPA-2026-001" -1 "JPN" 1)))
-  (is (thrown? Exception (r/register-claims-recommendation "TPA-2026-001" 15000 "" 1)))
-  (is (thrown? Exception (r/register-claims-recommendation "TPA-2026-001" 15000 "JPN" -1))))
+  (is (thrown? #?(:clj Exception :cljs js/Error) (r/register-claims-recommendation "" 15000 "JPN" 1)))
+  (is (thrown? #?(:clj Exception :cljs js/Error) (r/register-claims-recommendation "TPA-2026-001" -1 "JPN" 1)))
+  (is (thrown? #?(:clj Exception :cljs js/Error) (r/register-claims-recommendation "TPA-2026-001" 15000 "" 1)))
+  (is (thrown? #?(:clj Exception :cljs js/Error) (r/register-claims-recommendation "TPA-2026-001" 15000 "JPN" -1))))
 
 ;; ----------------------------- register-apportionment -----------------------------
 
@@ -66,11 +66,11 @@
 
 (deftest apportionment-validation-rules
   (let [contributions (r/apportion-general-average interests-fixture 600000)]
-    (is (thrown? Exception (r/register-apportionment "" 600000 contributions "GBR" 0)))
-    (is (thrown? Exception (r/register-apportionment "GA-2026-001" -1 contributions "GBR" 0)))
-    (is (thrown? Exception (r/register-apportionment "GA-2026-001" 600000 [] "GBR" 0)))
-    (is (thrown? Exception (r/register-apportionment "GA-2026-001" 600000 contributions "" 0)))
-    (is (thrown? Exception (r/register-apportionment "GA-2026-001" 600000 contributions "GBR" -1)))))
+    (is (thrown? #?(:clj Exception :cljs js/Error) (r/register-apportionment "" 600000 contributions "GBR" 0)))
+    (is (thrown? #?(:clj Exception :cljs js/Error) (r/register-apportionment "GA-2026-001" -1 contributions "GBR" 0)))
+    (is (thrown? #?(:clj Exception :cljs js/Error) (r/register-apportionment "GA-2026-001" 600000 [] "GBR" 0)))
+    (is (thrown? #?(:clj Exception :cljs js/Error) (r/register-apportionment "GA-2026-001" 600000 contributions "" 0)))
+    (is (thrown? #?(:clj Exception :cljs js/Error) (r/register-apportionment "GA-2026-001" 600000 contributions "GBR" -1)))))
 
 (deftest recommendation-history-is-append-only
   (let [contributions (r/apportion-general-average interests-fixture 600000)
