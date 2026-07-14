@@ -148,6 +148,7 @@ toward the same lib.
 | `src/auxiliary/operation.cljc` | **OperationActor** -- langgraph-clj StateGraph |
 | `src/auxiliary/sim.cljc` | demo driver |
 | `test/auxiliary/*_test.clj` | governor contract · phase invariants · store parity · registry conformance · facts coverage |
+| `wasm/apportionment_mismatch.kotoba` | PoC: a WASM-compiled (`kotoba-lang/kotoba` -> `kotoba-lang/kototama`'s `actor:host` ABI) per-interest port of `auxiliary.governor`'s `apportionment-mismatch-violations` independent-recompute check, with a 1-unit integer-truncation tolerance in place of `close?`'s float epsilon -- see `wasm/README.md` for the offset layout and tolerance-translation rationale |
 
 ## Business-process coverage (honest)
 
