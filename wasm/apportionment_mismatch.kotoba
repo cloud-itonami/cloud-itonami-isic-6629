@@ -1,0 +1,56 @@
+(ns cloud-itonami-apportionment-mismatch)
+
+(defn abs-diff [a b]
+  (if (< a b) (- b a) (- a b)))
+
+(defn apportionment-matches? [value-at-risk total-value-at-risk total-loss-amount claimed-contribution]
+  (if (zero? total-value-at-risk)
+    0
+    (let [recomputed (quot (* value-at-risk total-loss-amount) total-value-at-risk)]
+      (<= (abs-diff recomputed claimed-contribution) 1))))
+
+;; ABI: `main` stays 0-arity (the compiler rejects a parameterized main --
+;; :main-arity, see kotoba-lang/kotoba's compile-wasm-expr) and reads its
+;; four real i32 inputs out of the exported linear memory instead, at fixed
+;; byte offsets a host writes into before calling main() (same convention as
+;; cloud-itonami-isic-6492's affordability.kotoba / cloud-itonami-isic-6511's
+;; underwriting_decision.kotoba / cloud-itonami-isic-6630's
+;; fee_accrual.kotoba):
+;;   offset 0:  value-at-risk           (i32, THIS ONE interest's value at
+;;                                       risk, smallest currency unit)
+;;   offset 4:  total-value-at-risk     (i32, the SUM of value-at-risk
+;;                                       across every interest in the case
+;;                                       -- the pro-rata denominator
+;;                                       `auxiliary.registry/apportion-
+;;                                       general-average` reduces over)
+;;   offset 8:  total-loss-amount       (i32, the case's jointly-shared
+;;                                       general-average loss)
+;;   offset 12: claimed-contribution    (i32, THIS interest's OWN claimed
+;;                                       per-interest contribution, rounded
+;;                                       to the nearest smallest-currency-
+;;                                       unit)
+;; Returns 1 (this interest's claimed contribution matches the independent
+;; pro-rata recompute, within a 1-unit integer-truncation tolerance) or 0
+;; (mismatch -- auxiliary.governor's :apportionment-mismatch HARD violation
+;; for THIS interest). `apportionment-mismatch-violations` iterates every
+;; interest in a case; a host loops this call once per interest (writing
+;; that interest's value-at-risk/claimed-contribution + the case-wide
+;; total-value-at-risk/total-loss-amount before each call) and treats the
+;; WHOLE case as mismatched if ANY interest's call returns 0 -- the same
+;; "any mismatched interest fails the case" fold
+;; `apportionment-mismatch-violations`'s `(remove ...) ... (when (seq
+;; mismatched) ...)` performs in Clojure, just done per-call instead of
+;; per-collection because the wasm-compilable subset has no loops/
+;; recursion/collections (see wasm/README.md).
+;;
+;; wasm's own `i32.div_s` TRAPS on divide-by-zero (aborts the whole
+;; instance, unlike a JVM exception a caller could catch), so
+;; total-value-at-risk = 0 short-circuits to 0 (mismatch) instead of ever
+;; reaching the division -- defense-in-depth only: the real
+;; `apportion-general-average` already guards this exact case with a
+;; thrown `ex-info` (`"total value-at-risk is zero"`) long before this
+;; vehicle would ever call the wasm guest, the same posture
+;; `affordability.kotoba`'s `(if (> annual-income 0) ... 0)` guard
+;; documents.
+(defn main []
+  (apportionment-matches? (mem-i32-at 0 0) (mem-i32-at 0 4) (mem-i32-at 0 8) (mem-i32-at 0 12)))
