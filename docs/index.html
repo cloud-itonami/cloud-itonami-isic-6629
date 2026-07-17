@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Other activities auxiliary to insurance and pension funding | cloud-itonami-isic-6629</title>
+  <meta name="description" content="Other activities auxiliary to insurance and pension funding — governed open occupation blueprint (ISIC 6629).">
+  <style>
+    :root { --bg:#f5f7fa; --card:#fff; --fg:#1b1f24; --muted:#57606a; --accent:#1e3a8a; --line:#d0d7de; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg:#0d1117; --card:#161b22; --fg:#e6edf3; --muted:#8d96a0; --accent:#58a6ff; --line:#30363d; }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: linear-gradient(135deg, var(--bg), #c3cfe2);
+           min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; color: var(--fg); }
+    .container { max-width: 800px; width: 100%; background: var(--card); border-radius: 12px;
+                 box-shadow: 0 10px 40px rgba(0,0,0,.1); padding: 48px 40px; border: 1px solid var(--line); }
+    h1 { font-size: 1.85rem; color: var(--accent); margin-bottom: 8px; }
+    .badge { display: inline-block; background: #e0e7ff; color: var(--accent); padding: 3px 10px;
+             border-radius: 4px; font-size: .85rem; font-weight: 600; margin-bottom: 20px; }
+    @media (prefers-color-scheme: dark) { .badge { background: #1f2a44; } }
+    .pitch { border-left: 4px solid var(--accent); padding-left: 16px; margin: 20px 0 28px; color: var(--muted); line-height: 1.7; }
+    .pitch p { margin-bottom: 10px; }
+    .meta { font-size: .9rem; color: var(--muted); margin-bottom: 24px; }
+    .meta code { background: var(--bg); padding: 1px 6px; border-radius: 4px; }
+    .cta { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+    @media (max-width: 560px) { .cta { grid-template-columns: 1fr; } }
+    .cta a { display: block; text-align: center; text-decoration: none; padding: 14px 18px;
+             border-radius: 8px; font-weight: 600; }
+    .cta .primary { background: var(--accent); color: #fff; }
+    .cta .secondary { border: 1.5px solid var(--accent); color: var(--accent); }
+    ul.links { list-style: none; font-size: .95rem; }
+    ul.links li { margin: 8px 0; }
+    a { color: var(--accent); }
+    footer { margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--line);
+             font-size: .85rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>Other activities auxiliary to insurance and pension funding</h1>
+    <div class="badge">ISIC 6629 · maturity implemented</div>
+    <div class="pitch">
+      <p>Open Business Blueprint for ISIC Rev.5 6629: Other activities auxiliary to insurance and pension funding. This repository publishes an outsourced claims-administration and marine general-average adjustment execution actor as an OSS business that any qualified, licensed operator can fork, deploy, run, improve and sell.</p>
+      <p>Built on this workspace's [langgraph-clj](https://github.com/com-junkawasaki/langgraph-clj) StateGraph runtime (portable .cljc, supervised superstep loop, interrupts, Datomic/in-mem checkpoints) -- the same actor pattern as [cloud-itonami-isic-6511](https://github.com/cloud-itonami/cloud-itonami-isic-6511) (life insurance), [cloud-itonami-isic-6512](https://github.com/cloud-itonami/cloud-itonami-isic-6512) (non-life insurance), [cloud-itonami-isic-6621](https://github.com/cloud-itonami/cloud-itonami-isic-6621) (independent loss adjustment) and [cloud-itonami-isic-6622](https://github.com/cloud-itonami/cloud-itonami-isic-6622) (insurance intermediation). Here it is Claims-LLM ⊣ Insurance Auxiliary Governor.</p>
+      <p>&gt; Why an actor layer at all? An LLM is great at drafting a case &gt; summary, normalizing case intake, and running the arithmetic for a &gt; general-average apportionment -- but it has no notion of which &gt; jurisdiction's licensing/methodology requirements are official, no &gt; license to administer claims or adjust average, and no way to know on &gt; its own whether a claimed apportionment is arithmetically correct. &gt; Letting it finalize a recommendation or an apportionment directly &gt; invites fabricated licensing citations, silently-wrong loss-sharing &gt; math that a shipping interest or insurer would actually rely on for a &gt; real settlement, and liability for whoever runs it. This project seals &gt; the Claims-LLM into a single node and wraps it with an independent &gt; Insurance Auxiliary Governor, a human approval workflow, and &gt; an immutable audit ledger.</p>
+    </div>
+    <p class="meta">Domain <code>insurance/auxiliary</code> · Governor <code>insurance-auxiliary-governor</code> · License <code>AGPL-3.0-or-later</code></p>
+    <div class="cta">
+      <a class="primary" href="https://itonami.cloud/isco-1212/">Fork + self-host claim</a>
+      <a class="secondary" href="https://itonami.cloud/docs/go-live.md">Paid go-live path</a>
+    </div>
+    <ul class="links">
+      <li><a href="https://github.com/cloud-itonami/cloud-itonami-isic-6629">GitHub repository</a></li>
+      <li><a href="./operator-quickstart.md">Operator quickstart</a></li>
+      <li><a href="https://github.com/cloud-itonami/cloud-itonami-isic-6629/blob/main/blueprint.edn">blueprint.edn</a></li>
+      <li><a href="https://github.com/cloud-itonami/cloud-itonami-isic-6629/blob/main/README.md">README</a></li>
+    </ul>
+    <footer>
+      <p>Open occupation blueprint — no invented usage or revenue metrics. Product face generated for impl-product maturity (Lane C).</p>
+    </footer>
+  </main>
+</body>
+</html>
