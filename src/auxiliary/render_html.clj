@@ -40,6 +40,7 @@
   (:require [clojure.java.io :as io]
             [clojure.set :as set]
             [clojure.string :as str]
+            [jp-go-dds.skin :as dds-skin]
             [langgraph.graph :as g]
             [auxiliary.facts :as facts]
             [auxiliary.kernels.gate :as kernel]
@@ -323,12 +324,19 @@
                         (str "<tr>" (str/join (map #(str "<td>" % "</td>") r)) "</tr>")))
        "\n</tbody></table></div>"))
 
-(def ^:private css "
+(def ^:private css
+  "Console skin layered ON TOP of DADS (`jp-go-dds.skin/dds+skin`), which
+  is emitted first in `head-html` and supplies the typography, table,
+  code and semantic-colour base. Everything here is console-specific
+  vocabulary DADS has no opinion about: the four disposition colours
+  (hold / phase-gate / commit / approver-reject), the KPI strip, the
+  hold cards and the callout. Layout stays with `.wrap` -- the DADS
+  skin's `body` width is neutralised below rather than fought with."
+  "
 :root{--bg:#f7f8fa;--fg:#1a1c1f;--muted:#5b6470;--line:#d5dae1;--card:#fff;
 --accent:#0b4da2;--hold:#a5122a;--gate:#8a5a00;--commit:#0d6a3f;--reject:#6d3ab0;--code:#f0f2f5}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);
-font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Noto Sans JP',sans-serif;
+body{margin:0;max-width:none;padding:0;background:var(--bg);color:var(--fg);
 line-height:1.6;font-size:15px}
 .wrap{max-width:1180px;margin:0 auto;padding:32px 20px 72px}
 header.top{border-bottom:3px solid var(--accent);padding-bottom:20px;margin-bottom:8px}
@@ -382,7 +390,11 @@ footer{color:var(--muted);font-size:13px;margin-top:28px;border-top:1px solid va
 (defn- head-html [title]
   (str "<!DOCTYPE html>\n<html lang=\"ja\">\n<head>\n<meta charset=\"utf-8\">\n"
        "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n"
-       "<title>" (esc title) "</title>\n<style>" css "</style>\n</head>\n<body>\n<div class=\"wrap\">\n"))
+       "<title>" (esc title) "</title>\n<style>"
+       ;; DADS first (base design system), console skin second -- the
+       ;; skin is the overriding side, so the order is load-bearing.
+       (dds-skin/dds+skin) "\n" css
+       "</style>\n</head>\n<body>\n<div class=\"wrap\">\n"))
 
 (defn- kpi [class n label]
   (str "<li class=\"" class "\"><span class=\"n\">" n "</span><span class=\"l\">" (esc label) "</span></li>"))

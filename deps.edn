@@ -5,8 +5,16 @@
  ;; (forkable outside the workspace); the :local/root paths only resolve
  ;; inside the monorepo checkout — a standalone fork should override them
  ;; with git coordinates.
+ ;; jp-go-digital-design-system (DADS) is this workspace's BASE design
+ ;; system (CLAUDE.md, repo-wide mandatory). The build-time operator
+ ;; console renders on top of it; `jp-go-dds.skin/dds+skin` is the
+ ;; compat skin for exactly this shape of console markup. Pinned by
+ ;; :git/sha so the page is byte-reproducible.
  :deps {io.github.com-junkawasaki/langgraph-clj
-        {:local/root "../../kotoba-lang/langgraph"}}
+        {:local/root "../../kotoba-lang/langgraph"}
+        io.github.kotoba-lang/jp-go-digital-design-system
+        {:git/url "https://github.com/kotoba-lang/jp-go-digital-design-system"
+         :git/sha "83db99546eabc53613ae826ea41d1533a3c574af"}}
  :aliases
  {;; offline workspace dev -- pin transitive langchain-clj to local checkout
   :dev {:override-deps
