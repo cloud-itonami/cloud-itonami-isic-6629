@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>cloud-itonami-isic-6629 · Operator Console</title>
+<style>
+:root{--bg:#f7f8fa;--fg:#1a1c1f;--muted:#5b6470;--line:#d5dae1;--card:#fff;
+--accent:#0b4da2;--hold:#a5122a;--gate:#8a5a00;--commit:#0d6a3f;--reject:#6d3ab0;--code:#f0f2f5}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Noto Sans JP',sans-serif;
+line-height:1.6;font-size:15px}
+.wrap{max-width:1180px;margin:0 auto;padding:32px 20px 72px}
+header.top{border-bottom:3px solid var(--accent);padding-bottom:20px;margin-bottom:8px}
+h1{font-size:26px;margin:0 0 6px}
+.sub{color:var(--muted);font-size:14px;margin:0}
+h2{font-size:19px;margin:0 0 12px;padding-left:10px;border-left:5px solid var(--accent)}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;
+padding:20px;margin:20px 0}
+p{margin:0 0 12px}
+p.note{color:var(--muted);font-size:13.5px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#eef1f5;font-weight:600;white-space:nowrap}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+td:has(>.num){text-align:right}
+code{background:var(--code);padding:1px 5px;border-radius:4px;
+font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px}
+.kpis{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 4px;padding:0;list-style:none}
+.kpis li{flex:1 1 150px;background:var(--card);border:1px solid var(--line);
+border-radius:10px;padding:14px 16px}
+.kpis .n{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;display:block}
+.kpis .l{font-size:12.5px;color:var(--muted)}
+.kpis li.hold .n{color:var(--hold)}
+.kpis li.gate .n{color:var(--gate)}
+.kpis li.commit .n{color:var(--commit)}
+.kpis li.reject .n{color:var(--reject)}
+.tag{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;
+font-weight:600;white-space:nowrap;border:1px solid}
+.tag.hold{color:var(--hold);border-color:var(--hold);background:#fdeef1}
+.tag.gate{color:var(--gate);border-color:var(--gate);background:#fdf5e6}
+.tag.commit{color:var(--commit);border-color:var(--commit);background:#e9f6ef}
+.tag.reject{color:var(--reject);border-color:var(--reject);background:#f3ecfb}
+.tag.wait{color:var(--muted);border-color:var(--muted);background:#eef0f3}
+.hold-card{border:1px solid var(--hold);border-left:6px solid var(--hold);
+border-radius:8px;padding:14px 16px;margin:0 0 12px;background:#fffafb}
+.hold-card h3{margin:0 0 6px;font-size:15px;color:var(--hold)}
+.hold-card dl{display:grid;grid-template-columns:max-content 1fr;gap:3px 14px;margin:0;font-size:13.5px}
+.hold-card dt{color:var(--muted)}
+.hold-card dd{margin:0}
+.callout{border:1px solid var(--gate);border-left:6px solid var(--gate);
+background:#fffdf6;border-radius:8px;padding:14px 16px;margin:12px 0}
+.callout h3{margin:0 0 6px;font-size:15px;color:var(--gate)}
+.bad{color:var(--hold);font-weight:600}
+.good{color:var(--commit);font-weight:600}
+footer{color:var(--muted);font-size:13px;margin-top:28px;border-top:1px solid var(--line);padding-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+<h1>保険補助業務アクター オペレーターコンソール</h1>
+<p class="sub">cloud-itonami-isic-6629 · ISIC 6629 · クレーム管理受託 / 海損精算 — 実行結果のみ</p>
+</header>
+<section id="summary">
+<h2>実行サマリ (このページの全数値は実行結果)</h2>
+<ul class="kpis"><li class=""><span class="n">11</span><span class="l">actor run</span></li><li class="hold"><span class="n">3</span><span class="l">HARD governor 拒否</span></li><li class="gate"><span class="n">1</span><span class="l">phase gate による HOLD</span></li><li class="reject"><span class="n">1</span><span class="l">人間承認者による拒否</span></li><li class="commit"><span class="n">6</span><span class="l">SSoT へ commit</span></li><li class=""><span class="n">5</span><span class="l">承認要求 (escalation)</span></li></ul>
+<p class="note">HARD governor 拒否・phase gate・承認者拒否は<strong>別物</strong>として数えている。分類は audit fact の型 (<code>:t</code>) を第一基準にし、<code>:violations</code> の有無では判定しない — <code>:approval-rejected</code> fact 自身が <code>{:rule :approver-rejected}</code> を持つため、violation を数えると人間の拒否を governor の拒否として数えてしまう。</p>
+</section>
+<section id="runs">
+<h2>シナリオ別の実行結果</h2>
+<div class="tw"><table>
+<thead><tr><th>#</th><th>phase</th><th>op</th><th>対象</th><th>advisor conf.</th><th>ok?</th><th>hard?</th><th>escalate?</th><th>high-stakes?</th><th>violations</th><th>結果</th><th>意図</th></tr></thead>
+<tbody>
+<tr><td>S1</td><td>3</td><td><code>:case/intake</code></td><td>case-1</td><td><span class="num">0.97</span></td><td>true</td><td>false</td><td>false</td><td>false</td><td>0</td><td><span class="tag commit">COMMIT (auto)</span></td><td>海損精算案件 GA-2026-001 の取込。phase 3 の唯一の auto セル。</td></tr>
+<tr><td>S2</td><td>3</td><td><code>:jurisdiction/assess</code></td><td>case-1</td><td><span class="num">0.9</span></td><td>true</td><td>false</td><td>false</td><td>false</td><td>0</td><td><span class="tag commit">COMMIT (人間承認あり)</span></td><td>GBR の公式 spec-basis に基づく必要書類チェックリスト。governor は clean、phase gate が承認を要求。</td></tr>
+<tr><td>S3</td><td>3</td><td><code>:recommendation/finalize</code></td><td>case-1</td><td><span class="num">0.9</span></td><td>false</td><td>false</td><td>true</td><td>true</td><td>0</td><td><span class="tag commit">COMMIT (人間承認あり)</span></td><td>分担額の確定 (:actuation)。どの phase でも auto にならない。</td></tr>
+<tr><td>S4</td><td>3</td><td><code>:case/intake</code></td><td>case-2</td><td><span class="num">0.97</span></td><td>true</td><td>false</td><td>false</td><td>false</td><td>0</td><td><span class="tag commit">COMMIT (auto)</span></td><td>クレーム管理受託案件 TPA-2026-001 の取込。法域 ATL は未登録。</td></tr>
+<tr><td>S5</td><td>3</td><td><code>:jurisdiction/assess</code></td><td>case-2</td><td><span class="num">0.9</span></td><td>false</td><td><span class="bad">true</span></td><td>false</td><td>false</td><td>1</td><td><span class="tag hold">GOVERNOR HOLD (hard)</span></td><td>未登録法域 ATL の要件を提案しようとする。governor が拒否するはず。</td></tr>
+<tr><td>S6</td><td>3</td><td><code>:recommendation/finalize</code></td><td>case-2</td><td><span class="num">0.3</span></td><td>false</td><td><span class="bad">true</span></td><td>false</td><td>true</td><td>2</td><td><span class="tag hold">GOVERNOR HOLD (hard)</span></td><td>根拠資料が 1 件も無い状態でクレーム管理提案を確定しようとする。</td></tr>
+<tr><td>S7</td><td>3</td><td><code>:jurisdiction/assess</code></td><td>case-3</td><td><span class="num">0.9</span></td><td>true</td><td>false</td><td>false</td><td>false</td><td>0</td><td><span class="tag commit">COMMIT (人間承認あり)</span></td><td>GA-2026-002 の法域評価。S8 の前提 (assessment を実際に置く)。</td></tr>
+<tr><td>S8</td><td>3</td><td><code>:recommendation/finalize</code></td><td>case-3</td><td><span class="num">0.3</span></td><td>false</td><td><span class="bad">true</span></td><td>false</td><td>true</td><td>1</td><td><span class="tag hold">GOVERNOR HOLD (hard)</span></td><td>案件が主張する分担額を独立再計算と突き合わせる。ズレていれば拒否するはず。</td></tr>
+<tr><td>S9</td><td>1</td><td><code>:jurisdiction/assess</code></td><td>case-1</td><td><span class="num">0.9</span></td><td>true</td><td>false</td><td>false</td><td>false</td><td>0</td><td><span class="tag gate">PHASE GATE HOLD</span></td><td>phase 1 では jurisdiction/assess は書込不可。governor は clean なのに HOLD になる — これは governor の拒否ではない。</td></tr>
+<tr><td>S10</td><td>2</td><td><code>:case/intake</code></td><td>case-3</td><td><span class="num">0.97</span></td><td>true</td><td>false</td><td>false</td><td>false</td><td>0</td><td><span class="tag commit">COMMIT (人間承認あり)</span></td><td>phase 2 の case/intake は書込可・auto 不可 → 承認経由で commit。承認者が記録に残るかを見る。</td></tr>
+<tr><td>S11</td><td>3</td><td><code>:jurisdiction/assess</code></td><td>case-1</td><td><span class="num">0.9</span></td><td>true</td><td>false</td><td>false</td><td>false</td><td>0</td><td><span class="tag reject">APPROVER REJECTED</span></td><td>人間の承認者が拒否する。これは governor の拒否ではない (ただし :rule :approver-rejected を持つ)。</td></tr>
+</tbody></table></div>
+<p class="note"><code>:ok?</code> はこの repo では「hard violation が無く、かつ escalate も要らない」= そのまま commit してよい、の意味 (<code>auxiliary.governor/check</code> の <code>(= 0 code)</code>)。したがって <code>:ok? false</code> かつ <code>:escalate? true</code> かつ violations 0 件は<strong>違反ではなく escalation</strong> — 上の表で S3 がそれにあたる。</p>
+</section>
+<section id="holds">
+<h2>HARD governor 拒否 3 件 — 何を拒んだか</h2>
+<div class="hold-card">
+<h3>S5 · :jurisdiction/assess · case-2</h3>
+<dl><dt>rule</dt><dd><code>:no-spec-basis</code></dd><dt>detail</dt><dd>公式spec-basisの引用が無い提案は法域要件として扱えない</dd><dt>advisor 自己申告 confidence</dt><dd>0.9</dd><dt>disposition</dt><dd><code>:hold</code></dd><dt>ledger 上の :actor</dt><dd>op-1 (実行主体であって承認者ではない)</dd><dt>人間が覆せるか</dt><dd><span class="bad">不可</span> — HARD violation は <code>auxiliary.kernels.gate/verdict-code</code> で 2 を返し、<code>phase-disposition</code> がどの phase でも 2 (HOLD) を返す。承認ノードに到達しないので承認しようがない。</dd></dl>
+</div>
+<div class="hold-card">
+<h3>S6 · :recommendation/finalize · case-2</h3>
+<dl><dt>rule</dt><dd><code>:no-spec-basis</code> <code>:evidence-incomplete</code></dd><dt>detail</dt><dd>公式spec-basisの引用が無い提案は法域要件として扱えない<br>法域の必要根拠資料が充足していない状態での提案確定提案</dd><dt>advisor 自己申告 confidence</dt><dd>0.3</dd><dt>disposition</dt><dd><code>:hold</code></dd><dt>ledger 上の :actor</dt><dd>op-1 (実行主体であって承認者ではない)</dd><dt>人間が覆せるか</dt><dd><span class="bad">不可</span> — HARD violation は <code>auxiliary.kernels.gate/verdict-code</code> で 2 を返し、<code>phase-disposition</code> がどの phase でも 2 (HOLD) を返す。承認ノードに到達しないので承認しようがない。</dd></dl>
+</div>
+<div class="hold-card">
+<h3>S8 · :recommendation/finalize · case-3</h3>
+<dl><dt>rule</dt><dd><code>:apportionment-mismatch</code></dd><dt>detail</dt><dd>2件の利害関係者の分担額が独立再計算結果と一致しない</dd><dt>advisor 自己申告 confidence</dt><dd>0.3</dd><dt>disposition</dt><dd><code>:hold</code></dd><dt>ledger 上の :actor</dt><dd>op-1 (実行主体であって承認者ではない)</dd><dt>人間が覆せるか</dt><dd><span class="bad">不可</span> — HARD violation は <code>auxiliary.kernels.gate/verdict-code</code> で 2 を返し、<code>phase-disposition</code> がどの phase でも 2 (HOLD) を返す。承認ノードに到達しないので承認しようがない。</dd></dl>
+</div>
+</section>
+<section id="discriminate">
+<h2>HOLD の 3 種類 — 同じ「止まった」でも別物</h2>
+<div class="tw"><table>
+<thead><tr><th>種類</th><th>audit fact :t</th><th>判別条件</th><th>governor は clean か</th><th>観測されたシナリオ</th></tr></thead>
+<tbody>
+<tr><td><span class="tag hold">HARD governor 拒否</span></td><td><code>:governor-hold</code></td><td><code>:phase-reason</code> が無い</td><td><span class="bad">いいえ (hard? true)</span></td><td>S5 S6 S8</td></tr>
+<tr><td><span class="tag gate">phase gate による HOLD</span></td><td><code>:governor-hold</code></td><td><code>:phase-reason</code> が有る</td><td><span class="good">はい (hard? false, violations 0)</span></td><td>S9</td></tr>
+<tr><td><span class="tag reject">人間承認者による拒否</span></td><td><code>:approval-rejected</code></td><td>fact 型そのもの</td><td><span class="good">はい (governor は escalate まで通した)</span></td><td>S11</td></tr>
+</tbody></table></div>
+<p class="note">phase gate の HOLD (S9) は <code>:violations</code> が 0 件で <code>:phase-disabled</code> (phase 1) を持つ。承認者拒否 (S11) は逆に <code>:violations</code> を <em>持つ</em> — <code>:approver-rejected</code> — なので violation の有無で分類すると、この 3 行目が 1 行目に紛れ込む。</p>
+</section>
+<section id="recompute">
+<h2>独立再計算 — 案件が主張する分担額 vs. この repo 自身の計算</h2>
+<p>governor の <code>:apportionment-mismatch</code> チェックは、案件が主張する <code>:claimed-contribution</code> を信用せず、同じ <code>:interests</code> / <code>:total-loss-amount</code> から <code>auxiliary.registry/apportion-general-average</code> で独立に再計算し、1 件でも許容差 (1e-6) を超えたら HOLD する。下表は build 時にその関数を実際に呼んで作っている。</p>
+<h3>GA-2026-001 · case-1 · 共同海損 600,000 (GBR)</h3><div class="tw"><table>
+<thead><tr><th>利害関係者</th><th>value-at-risk</th><th>案件の主張額</th><th>独立再計算</th><th>差</th><th>判定</th></tr></thead>
+<tbody>
+<tr><td>Cargo Owner A</td><td><span class="num">2,000,000</span></td><td><span class="num">200,000</span></td><td><span class="num">200,000</span></td><td><span class="num">0</span></td><td><span class="good">一致</span></td></tr>
+<tr><td>Shipowner</td><td><span class="num">3,000,000</span></td><td><span class="num">300,000</span></td><td><span class="num">300,000</span></td><td><span class="num">0</span></td><td><span class="good">一致</span></td></tr>
+<tr><td>Freight Interest</td><td><span class="num">1,000,000</span></td><td><span class="num">100,000</span></td><td><span class="num">100,000</span></td><td><span class="num">0</span></td><td><span class="good">一致</span></td></tr>
+</tbody></table></div><p class="note">不一致 0 件 → この案件については通過。</p>
+<h3>GA-2026-002 · case-3 · 共同海損 100,000 (GBR)</h3><div class="tw"><table>
+<thead><tr><th>利害関係者</th><th>value-at-risk</th><th>案件の主張額</th><th>独立再計算</th><th>差</th><th>判定</th></tr></thead>
+<tbody>
+<tr><td>Cargo Owner B</td><td><span class="num">500,000</span></td><td><span class="num">99,999</span></td><td><span class="num">50,000</span></td><td><span class="num bad">49,999</span></td><td><span class="bad">不一致</span></td></tr>
+<tr><td>Shipowner B</td><td><span class="num">500,000</span></td><td><span class="num">1</span></td><td><span class="num">50,000</span></td><td><span class="num bad">-49,999</span></td><td><span class="bad">不一致</span></td></tr>
+</tbody></table></div><p class="note">不一致 2 件 → governor は <code>:apportionment-mismatch</code> で HOLD (S8)。</p>
+</section>
+<section id="register">
+<h2>案件レジスタ (実行後の SSoT)</h2>
+<div class="tw"><table>
+<thead><tr><th>case</th><th>参照番号</th><th>case-type</th><th>法域</th><th>共同海損/推奨額</th><th>status</th><th>recommendation-number</th></tr></thead>
+<tbody>
+<tr><td><code>case-1</code></td><td>GA-2026-001</td><td><code>:average-adjustment</code></td><td>GBR</td><td><span class="num">600,000</span></td><td><code>:finalized</code></td><td>GBR-REC-000000</td></tr>
+<tr><td><code>case-2</code></td><td>TPA-2026-001</td><td><code>:claims-administration</code></td><td>ATL</td><td><span class="num">15,000</span></td><td><code>:ready</code></td><td>—</td></tr>
+<tr><td><code>case-3</code></td><td>GA-2026-002</td><td><code>:average-adjustment</code></td><td>GBR</td><td><span class="num">100,000</span></td><td><code>:ready</code></td><td>—</td></tr>
+</tbody></table></div>
+</section>
+<section id="assessments">
+<h2>committed な法域評価 (assessment/set)</h2>
+<div class="tw"><table>
+<thead><tr><th>case</th><th>法域</th><th>必要書類 件数</th><th>spec-basis</th><th>legal-basis</th><th>:approved-by</th></tr></thead>
+<tbody>
+<tr><td><code>case-1</code></td><td>GBR</td><td>4</td><td>https://www.average-adjusters.com/</td><td>Marine Insurance Act 1906 (general average provisions) -- AAA Rules of Practice</td><td>adj-hanako</td></tr>
+<tr><td><code>case-3</code></td><td>GBR</td><td>4</td><td>https://www.average-adjusters.com/</td><td>Marine Insurance Act 1906 (general average provisions) -- AAA Rules of Practice</td><td>adj-hanako</td></tr>
+</tbody></table></div>
+<p class="note">未登録法域 (ATL) の評価は commit されていない — governor が HOLD したため、SSoT に行が作られない。</p>
+</section>
+<section id="records">
+<h2>確定した推奨/分担ドラフト記録 (append-only)</h2>
+<h3>GBR-REC-000000 · apportionment-draft</h3><div class="tw"><table>
+<thead><tr><th>field</th><th>value</th></tr></thead>
+<tbody>
+<tr><td>case_reference</td><td>GA-2026-001</td></tr>
+<tr><td>jurisdiction</td><td>GBR</td></tr>
+<tr><td>immutable</td><td>true</td></tr>
+<tr><td>total_loss_amount</td><td><span class="num">600,000</span></td></tr>
+<tr><td>contribution · Cargo Owner A</td><td><span class="num">200,000</span></td></tr>
+<tr><td>contribution · Shipowner</td><td><span class="num">300,000</span></td></tr>
+<tr><td>contribution · Freight Interest</td><td><span class="num">100,000</span></td></tr>
+</tbody></table></div>
+<p class="note">記録に載る分担額は案件の主張値ではなく <code>auxiliary.registry/apportion-general-average</code> の独立再計算値 (<code>auxiliary.store/finalize!</code>)。証書は全て <code>status: draft-unsigned</code> / <code>issued_by_registry: false</code> — 署名は免許を持つ精算人の行為であってこの actor の行為ではない。</p>
+</section>
+<section id="ledger">
+<h2>append-only 監査台帳 (11 件)</h2>
+<div class="tw"><table>
+<thead><tr><th>#</th><th>:t</th><th>:op</th><th>:actor</th><th>:subject</th><th>:disposition</th><th>:basis / :violations</th></tr></thead>
+<tbody>
+<tr><td>0</td><td><code>:committed</code></td><td><code>:case/intake</code></td><td>op-1</td><td>case-1</td><td><code>:commit</code></td><td>:id<br>:status</td></tr>
+<tr><td>1</td><td><code>:committed</code></td><td><code>:jurisdiction/assess</code></td><td>op-1</td><td>case-1</td><td><code>:commit</code></td><td>Marine Insurance Act 1906 (general average provisions) -- AAA Rules of Practice<br>https://www.average-adjusters.com/</td></tr>
+<tr><td>2</td><td><code>:committed</code></td><td><code>:recommendation/finalize</code></td><td>op-1</td><td>case-1</td><td><code>:commit</code></td><td>https://www.average-adjusters.com/</td></tr>
+<tr><td>3</td><td><code>:committed</code></td><td><code>:case/intake</code></td><td>op-1</td><td>case-2</td><td><code>:commit</code></td><td>:id<br>:status</td></tr>
+<tr><td>4</td><td><code>:governor-hold</code></td><td><code>:jurisdiction/assess</code></td><td>op-1</td><td>case-2</td><td><code>:hold</code></td><td><code>:no-spec-basis</code> 公式spec-basisの引用が無い提案は法域要件として扱えない</td></tr>
+<tr><td>5</td><td><code>:governor-hold</code></td><td><code>:recommendation/finalize</code></td><td>op-1</td><td>case-2</td><td><code>:hold</code></td><td><code>:no-spec-basis</code> 公式spec-basisの引用が無い提案は法域要件として扱えない<br><code>:evidence-incomplete</code> 法域の必要根拠資料が充足していない状態での提案確定提案</td></tr>
+<tr><td>6</td><td><code>:committed</code></td><td><code>:jurisdiction/assess</code></td><td>op-1</td><td>case-3</td><td><code>:commit</code></td><td>Marine Insurance Act 1906 (general average provisions) -- AAA Rules of Practice<br>https://www.average-adjusters.com/</td></tr>
+<tr><td>7</td><td><code>:governor-hold</code></td><td><code>:recommendation/finalize</code></td><td>op-1</td><td>case-3</td><td><code>:hold</code></td><td><code>:apportionment-mismatch</code> 2件の利害関係者の分担額が独立再計算結果と一致しない</td></tr>
+<tr><td>8</td><td><code>:governor-hold</code></td><td><code>:jurisdiction/assess</code></td><td>op-1</td><td>case-1</td><td><code>:hold</code></td><td>—</td></tr>
+<tr><td>9</td><td><code>:committed</code></td><td><code>:case/intake</code></td><td>op-1</td><td>case-3</td><td><code>:commit</code></td><td>:id<br>:status</td></tr>
+<tr><td>10</td><td><code>:approval-rejected</code></td><td><code>:jurisdiction/assess</code></td><td>op-1</td><td>case-1</td><td><code>:hold</code></td><td><code>:approver-rejected</code> </td></tr>
+</tbody></table></div>
+</section>
+<section id="attribution">
+<h2>承認者の帰属 — 実行結果から導出した所見</h2>
+<p>下表は build 時に <strong>実際に人間の承認を受けて commit した run だけ</strong>を対象に、その effect が書いた SSoT 面を Store プロトコル経由で読み直し、承認者らしきキー (<code>:approved-by</code> 等) が残っているかを走査した結果。「この repo には欠陥がある」と決め打ちで書いてはいない — 書込経路が直れば次の build でこの表は変わる。</p>
+<div class="tw"><table>
+<thead><tr><th>#</th><th>effect</th><th>対象</th><th>書込先</th><th>承認者</th><th>残っているキー</th><th>帰属</th></tr></thead>
+<tbody>
+<tr><td>S2</td><td><code>:assessment/set</code></td><td>case-1</td><td>assessments</td><td>adj-hanako</td><td><code>:approved-by</code></td><td><span class="good">保持</span></td></tr>
+<tr><td>S3</td><td><code>:recommendation/mark-finalized</code></td><td>case-1</td><td>cases + recommendations</td><td>adj-hanako</td><td>—</td><td><span class="bad">消失</span></td></tr>
+<tr><td>S7</td><td><code>:assessment/set</code></td><td>case-3</td><td>assessments</td><td>adj-hanako</td><td><code>:approved-by</code></td><td><span class="good">保持</span></td></tr>
+<tr><td>S10</td><td><code>:case/upsert</code></td><td>case-3</td><td>cases</td><td>tpa-tanaka</td><td>—</td><td><span class="bad">消失</span></td></tr>
+</tbody></table></div>
+<div class="callout">
+<h3>開示 (このタスクでは修正していない)</h3>
+<p>上の走査では effect ごとに挙動が割れた。<br>· <code>:recommendation/mark-finalized</code> は cases + recommendations に承認者を残さない (S3, 承認者 adj-hanako)。<br>· <code>:case/upsert</code> は cases に承認者を残さない (S10, 承認者 tpa-tanaka)。<br>原因は <code>auxiliary.operation/commit-record</code> が承認者を <code>:payload</code> にだけ載せるのに対し、<code>auxiliary.store/MemStore</code> の <code>:case/upsert</code> は <code>:value</code> を使い、<code>:recommendation/mark-finalized</code> は <code>:value</code> も <code>:payload</code> も使わず <code>finalize!</code> を呼ぶため。<code>:assessment/set</code> だけが <code>:payload</code> を使うので承認者が残る。</p><p>台帳側も同じ穴がある: 実行された <code>:approval-granted</code> fact は run の <code>:audit</code> チャネルには載るが、commit ノードが台帳へ書くのは <code>commit-fact</code> だけなので、<strong>永続化された台帳 11 件のうち <code>:approval-granted</code> は 0 件</strong>、承認者らしきキーは 0 件。つまり「誰が承認したか」は永続層に残っていない。</p><p>rendering タスクの範囲で governor / store を書き換えるのは筋が悪いので修正はしていない。ここに開示する。</p>
+</div>
+<p class="note"><strong>:actor は承認者ではない。</strong> 台帳 fact の <code>:actor</code> は <code>:context</code> の実行主体 id で、実測値は <code>op-1</code>。この run で使った承認者 id は <code>adj-hanako</code> <code>tpa-tanaka</code> であり、両者は交わらない (<span class="good">互いに素であることを実測</span>) — <code>:actor</code> を承認者として読むと、この 2 つが同じ値の環境では見分けがつかなくなる。</p>
+</section>
+<section id="facts">
+<h2>法域 spec-basis カタログ (seed)</h2>
+<div class="tw"><table>
+<thead><tr><th>ISO3</th><th>名称</th><th>所管当局</th><th>法的根拠</th><th>出典</th><th>必要書類</th></tr></thead>
+<tbody>
+<tr><td><code>DEU</code></td><td>Germany</td><td>Bundesanstalt für Finanzdienstleistungsaufsicht (BaFin)</td><td>Handelsgesetzbuch (HGB) §§ 588 ff. (Große Haverei / general average)</td><td><code>https://www.bafin.de/</code></td><td>4 件</td></tr>
+<tr><td><code>GBR</code></td><td>United Kingdom</td><td>Association of Average Adjusters (AAA) / Financial Conduct Authority (FCA)</td><td>Marine Insurance Act 1906 (general average provisions) -- AAA Rules of Practice</td><td><code>https://www.average-adjusters.com/</code></td><td>4 件</td></tr>
+<tr><td><code>JPN</code></td><td>Japan</td><td>金融庁 (Financial Services Agency)</td><td>保険業法 (Insurance Business Act) -- 損害保険代理店・鑑定人制度</td><td><code>https://www.fsa.go.jp/</code></td><td>4 件</td></tr>
+<tr><td><code>USA-NY</code></td><td>United States -- New York (exemplar; federalism note below)</td><td>New York State Department of Financial Services (NYDFS)</td><td>New York Insurance Law Article 21 (Adjusters)</td><td><code>https://www.dfs.ny.gov/</code></td><td>4 件</td></tr>
+</tbody></table></div>
+<p class="note">coverage: 登録 4 / 要求 4 法域。cloud-itonami-isic-6629 R0: 4 jurisdictions seeded with an official spec-basis. This is a starting catalog, not a survey of all ~194 jurisdictions -- extend `auxiliary.facts/catalog`, never fabricate a jurisdiction's requirements.</p>
+<p class="note">海損精算の方法論は法域別ではなく York-Antwerp Rules 2016 が全エントリ共通 (契約/船荷証券への組込みによる)。この表に無い法域は spec-basis 無し = governor が HOLD する (S5 がその実例)。</p>
+</section>
+<section id="gate">
+<h2>rollout phase テーブルと safety kernel</h2>
+<div class="tw"><table>
+<thead><tr><th>phase</th><th>label</th><th>writes</th><th>auto-commit</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>read-only</td><td>—</td><td>—</td></tr>
+<tr><td>1</td><td>assisted-intake</td><td><code>:case/intake</code></td><td>—</td></tr>
+<tr><td>2</td><td>assisted-assess</td><td><code>:case/intake</code> <code>:jurisdiction/assess</code></td><td>—</td></tr>
+<tr><td>3</td><td>supervised-auto</td><td><code>:case/intake</code> <code>:jurisdiction/assess</code> <code>:recommendation/finalize</code></td><td><code>:case/intake</code></td></tr>
+</tbody></table></div>
+<p class="note"><code>:recommendation/finalize</code> はどの phase の <code>:auto</code> にも入っていない — rollout の到達点ではなく構造的な不変条件。governor 側の <code>:actuation</code> high-stakes ゲートが同じことを独立に強制している。</p>
+<p class="note">safety kernel battery (build 時に実行): <code>auxiliary.kernels.gate/battery-pass-count</code> = 36 / 36 ケース <span class="good">全通過</span>。confidence floor = <code>60</code> (x100)。</p>
+</section>
+<footer><p>この HTML は <code>src/auxiliary/render_html.clj</code> が <code>auxiliary.store/seed-db</code> に対して <code>auxiliary.operation/build</code> のグラフを 11 回実行し、その出力だけから生成している。再生成: <code>clojure -M:dev:render-html</code>。</p><p>build 時不変条件: HARD governor 拒否が 0 件なら <code>-main</code> は例外を投げ、ファイルを書かない (今回の実測値 3 件)。加えて fact 型による分類と governor verdict の <code>:hard?</code> が全 run で一致すること、phase gate による HOLD が最低 1 件観測されることも同じく build を落とす条件にしてある。</p><p>cloud-itonami-isic-6629 · ISIC 6629 保険・年金基金補助活動 · 生成物であり手書きではない。</p></footer>
+</div>
+</body>
+</html>
