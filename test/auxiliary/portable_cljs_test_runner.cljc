@@ -25,6 +25,7 @@
             [auxiliary.kernels.gate-test]
             [auxiliary.phase-test]
             [auxiliary.registry-test]
+            [auxiliary.operation-graph-test]
             [auxiliary.store-contract-test]))
 
 #?(:cljs
@@ -38,4 +39,5 @@
              'auxiliary.phase-test
              'auxiliary.kernels.gate-test
              'auxiliary.governor-contract-test
-             'auxiliary.store-contract-test))
+             'auxiliary.store-contract-test
+             'auxiliary.operation-graph-test))
