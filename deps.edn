@@ -10,7 +10,12 @@
  ;; console renders on top of it; `jp-go-dds.skin/dds+skin` is the
  ;; compat skin for exactly this shape of console markup. Pinned by
  ;; :git/sha so the page is byte-reproducible.
- :deps {io.github.com-junkawasaki/langgraph-clj
+ :deps {
+        ;; kotoba.lang.text, not clojure.string. Pinned as an explicit floor:
+        ;; tools.deps takes the NEWEST sha it is shown, so without a floor here
+        ;; this repo silently rides whatever a sibling happens to name.
+        io.github.kotoba-lang/text {:git/sha "73bdb13ae7a3d004b44bca08be03a3191157a38f"}
+       io.github.com-junkawasaki/langgraph-clj
         {:local/root "../../kotoba-lang/langgraph"}
         io.github.kotoba-lang/jp-go-digital-design-system
         {:git/url "https://github.com/kotoba-lang/jp-go-digital-design-system"

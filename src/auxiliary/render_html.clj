@@ -39,7 +39,7 @@
   refusal as a governor refusal."
   (:require [clojure.java.io :as io]
             [clojure.set :as set]
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             [jp-go-dds.skin :as dds-skin]
             [langgraph.graph :as g]
             [auxiliary.facts :as facts]
