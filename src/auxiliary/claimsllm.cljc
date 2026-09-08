@@ -27,7 +27,7 @@
      :confidence 0..1}"
   (:require #?(:clj  [clojure.edn :as edn]
                :cljs [cljs.reader :as edn])
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             [auxiliary.facts :as facts]
             [auxiliary.registry :as registry]
             [auxiliary.store :as store]

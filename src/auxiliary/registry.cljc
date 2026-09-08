@@ -32,7 +32,7 @@
   finalizing the recommendation itself (that is `auxiliary.operation`'s
   `:recommendation/finalize`, always human-gated -- see README
   `Actuation`)."
-  (:require [clojure.string :as str]))
+  (:require [kotoba.lang.text :as str]))
 
 (defn- unsigned-certificate
   "Every certificate this actor produces is UNSIGNED -- signature is the
@@ -87,7 +87,7 @@
     (throw (ex-info "claims-recommendation: jurisdiction required" {})))
   (when (< sequence 0)
     (throw (ex-info "claims-recommendation: sequence must be >= 0" {})))
-  (let [record-number (str (str/upper-case jurisdiction) "-REC-" (zero-pad sequence 6))
+  (let [record-number (str (str/upper jurisdiction) "-REC-" (zero-pad sequence 6))
         record {"record_id" record-number
                 "kind" "claims-recommendation-draft"
                 "case_reference" case-reference
@@ -114,7 +114,7 @@
     (throw (ex-info "apportionment: jurisdiction required" {})))
   (when (< sequence 0)
     (throw (ex-info "apportionment: sequence must be >= 0" {})))
-  (let [record-number (str (str/upper-case jurisdiction) "-REC-" (zero-pad sequence 6))
+  (let [record-number (str (str/upper jurisdiction) "-REC-" (zero-pad sequence 6))
         record {"record_id" record-number
                 "kind" "apportionment-draft"
                 "case_reference" case-reference

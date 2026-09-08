@@ -7,7 +7,7 @@
   `auxiliary.portable-cljs-test-runner`'s namespace list. Everything it
   exercises -- the graph, the governor, the safety kernel, the store --
   is portable `.cljc` and IS covered there."
-  (:require [clojure.string :as str]
+  (:require [kotoba.lang.text :as str]
             [clojure.test :refer [deftest is testing]]
             [auxiliary.render-html :as r]))
 
