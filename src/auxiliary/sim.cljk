@@ -1,5 +1,5 @@
 (ns auxiliary.sim
-  "Demo driver -- `clojure -M:dev:run`. Walks a clean average-adjustment
+  "Demo driver -- `kbb -M:dev:run`. Walks a clean average-adjustment
   case through intake -> jurisdiction methodology assessment ->
   recommendation-finalization proposal (always escalates) -> human
   approval -> commit, then shows three HARD holds (a claims-
