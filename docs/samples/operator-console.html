@@ -2689,7 +2689,7 @@ footer{color:var(--muted);font-size:13px;margin-top:28px;border-top:1px solid va
 <p class="note"><code>:recommendation/finalize</code> はどの phase の <code>:auto</code> にも入っていない — rollout の到達点ではなく構造的な不変条件。governor 側の <code>:actuation</code> high-stakes ゲートが同じことを独立に強制している。</p>
 <p class="note">safety kernel battery (build 時に実行): <code>auxiliary.kernels.gate/battery-pass-count</code> = 36 / 36 ケース <span class="good">全通過</span>。confidence floor = <code>60</code> (x100)。</p>
 </section>
-<footer><p>この HTML は <code>src/auxiliary/render_html.cljk</code> が <code>auxiliary.store/seed-db</code> に対して <code>auxiliary.operation/build</code> のグラフを 11 回実行し、その出力だけから生成している。再生成: <code>clojure -M:dev:render-html</code>。</p><p>build 時不変条件: HARD governor 拒否が 0 件なら <code>-main</code> は例外を投げ、ファイルを書かない (今回の実測値 3 件)。加えて fact 型による分類と governor verdict の <code>:hard?</code> が全 run で一致すること、phase gate による HOLD が最低 1 件観測されることも同じく build を落とす条件にしてある。</p><p>cloud-itonami-isic-6629 · ISIC 6629 保険・年金基金補助活動 · 生成物であり手書きではない。</p></footer>
+<footer><p>この HTML は <code>src/auxiliary/render_html.cljk</code> が <code>auxiliary.store/seed-db</code> に対して <code>auxiliary.operation/build</code> のグラフを 11 回実行し、その出力だけから生成している。再生成: <code>kbb -M:dev:render-html</code>。</p><p>build 時不変条件: HARD governor 拒否が 0 件なら <code>-main</code> は例外を投げ、ファイルを書かない (今回の実測値 3 件)。加えて fact 型による分類と governor verdict の <code>:hard?</code> が全 run で一致すること、phase gate による HOLD が最低 1 件観測されることも同じく build を落とす条件にしてある。</p><p>cloud-itonami-isic-6629 · ISIC 6629 保険・年金基金補助活動 · 生成物であり手書きではない。</p></footer>
 </div>
 </body>
 </html>
