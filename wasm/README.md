@@ -5,10 +5,10 @@
 recompute that cross-checks a general-average case's OWN claimed
 per-interest `:claimed-contribution` against `auxiliary.registry/
 apportion-general-average`'s pro-rata-by-value-at-risk recompute (see
-`src/auxiliary/governor.cljc`'s ns docstring, check 2b) -- into the
+`src/auxiliary/governor.cljk`'s ns docstring, check 2b) -- into the
 minimal `.kotoba` language subset, compiled to a real WASM module via
 `kotoba wasm emit`, and hosted via `kototama.tender`
-(`test/wasm/apportionment_mismatch_test.clj`).
+(`test/wasm/apportionment_mismatch_test.cljk`).
 
 This follows the same `kotoba wasm emit` → `kototama.tender` pipeline
 `cloud-itonami-isic-6492`'s `wasm/affordability.kotoba`,

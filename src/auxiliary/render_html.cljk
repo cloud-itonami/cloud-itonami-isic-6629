@@ -727,7 +727,7 @@ footer{color:var(--muted);font-size:13px;margin-top:28px;border-top:1px solid va
         "</code> (x100)。</p>")))
 
 (defn- footer-html [runs holds]
-  (str "<footer><p>この HTML は <code>src/auxiliary/render_html.clj</code> が "
+  (str "<footer><p>この HTML は <code>src/auxiliary/render_html.cljk</code> が "
        "<code>auxiliary.store/seed-db</code> に対して "
        "<code>auxiliary.operation/build</code> のグラフを "
        (str (count runs)) " 回実行し、その出力だけから生成している。"
