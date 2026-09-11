@@ -139,14 +139,14 @@ toward the same lib.
 
 | File | Role |
 |---|---|
-| `src/auxiliary/store.cljc` | **Store** protocol -- `MemStore` ‖ `DatomicStore` (`langchain.db`) + append-only audit ledger + claims-recommendation/apportionment history. No separate party/conflict concept -- this actor's distinctive check is an independent-recompute check, not a party screen |
-| `src/auxiliary/registry.cljc` | Claims-recommendation + apportionment draft records, plus `apportion-general-average` (a REAL, simplified pro-rata-by-value-at-risk formula -- see docstring for what it does not model) |
-| `src/auxiliary/facts.cljc` | Per-jurisdiction claims-administration licensing / average-adjustment methodology catalog with an official spec-basis citation per entry, honest coverage reporting |
-| `src/auxiliary/claimsllm.cljc` | **Claims-LLM Advisor** -- `mock-advisor` ‖ `llm-advisor`; intake/assessment/finalization proposals (finalization dispatches on the case's own `:case-type`) |
-| `src/auxiliary/governor.cljc` | **Insurance Auxiliary Governor** -- 3 checks: spec-basis (HARD) · evidence-incomplete (HARD, claims-administration cases) · apportionment-mismatch (HARD, average-adjustment cases, independent recompute) + 1 soft (confidence/actuation gate) |
-| `src/auxiliary/phase.cljc` | **Phase 0→3** -- read-only → assisted intake → assisted assess → supervised (finalization always human; case intake auto-eligible, no liability risk) |
-| `src/auxiliary/operation.cljc` | **OperationActor** -- langgraph-clj StateGraph |
-| `src/auxiliary/sim.cljc` | demo driver |
+| `src/auxiliary/store.cljk` | **Store** protocol -- `MemStore` ‖ `DatomicStore` (`langchain.db`) + append-only audit ledger + claims-recommendation/apportionment history. No separate party/conflict concept -- this actor's distinctive check is an independent-recompute check, not a party screen |
+| `src/auxiliary/registry.cljk` | Claims-recommendation + apportionment draft records, plus `apportion-general-average` (a REAL, simplified pro-rata-by-value-at-risk formula -- see docstring for what it does not model) |
+| `src/auxiliary/facts.cljk` | Per-jurisdiction claims-administration licensing / average-adjustment methodology catalog with an official spec-basis citation per entry, honest coverage reporting |
+| `src/auxiliary/claimsllm.cljk` | **Claims-LLM Advisor** -- `mock-advisor` ‖ `llm-advisor`; intake/assessment/finalization proposals (finalization dispatches on the case's own `:case-type`) |
+| `src/auxiliary/governor.cljk` | **Insurance Auxiliary Governor** -- 3 checks: spec-basis (HARD) · evidence-incomplete (HARD, claims-administration cases) · apportionment-mismatch (HARD, average-adjustment cases, independent recompute) + 1 soft (confidence/actuation gate) |
+| `src/auxiliary/phase.cljk` | **Phase 0→3** -- read-only → assisted intake → assisted assess → supervised (finalization always human; case intake auto-eligible, no liability risk) |
+| `src/auxiliary/operation.cljk` | **OperationActor** -- langgraph-clj StateGraph |
+| `src/auxiliary/sim.cljk` | demo driver |
 | `test/auxiliary/*_test.clj` | governor contract · phase invariants · store parity · registry conformance · facts coverage |
 | `wasm/apportionment_mismatch.kotoba` | PoC: a WASM-compiled (`kotoba-lang/kotoba` -> `kotoba-lang/kototama`'s `actor:host` ABI) per-interest port of `auxiliary.governor`'s `apportionment-mismatch-violations` independent-recompute check, with a 1-unit integer-truncation tolerance in place of `close?`'s float epsilon -- see `wasm/README.md` for the offset layout and tolerance-translation rationale |
 
