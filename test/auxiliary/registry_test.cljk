@@ -1,5 +1,5 @@
 (ns auxiliary.registry-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [auxiliary.registry :as r]))
 
 (defn- close? [a b] (< (Math/abs (- (double a) (double b))) 1e-6))

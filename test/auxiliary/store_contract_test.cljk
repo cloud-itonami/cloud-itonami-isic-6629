@@ -4,7 +4,7 @@
   what makes 'swap the SSoT for Datomic / kotoba-server' a configuration
   change, not a rewrite -- see every sibling actor's own store-contract
   test for the same pattern."
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [auxiliary.store :as store]))
 
 (defn- close? [a b] (< (Math/abs (- (double a) (double b))) 1e-6))

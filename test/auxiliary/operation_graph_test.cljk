@@ -7,7 +7,7 @@
   governor/phase/facts/registry/store/kernels in isolation, which proves
   those pure functions work but not that the graph wiring actually
   threads them together."
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [langgraph.graph :as g]
             [auxiliary.operation :as operation]
             [auxiliary.store :as store]))

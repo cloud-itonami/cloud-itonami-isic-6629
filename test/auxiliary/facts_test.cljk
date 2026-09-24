@@ -1,5 +1,5 @@
 (ns auxiliary.facts-test
-  (:require [clojure.test :refer [deftest is]]
+  (:require [kotoba.test :refer [deftest is]]
             [auxiliary.facts :as facts]))
 
 (deftest gbr-has-a-spec-basis
