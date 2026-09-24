@@ -12,7 +12,7 @@
   wasm/apportionment_mismatch.kotoba's ns-adjacent header comment for the
   offset layout and the integer-truncation tolerance rationale."
   (:require [clojure.java.io :as io]
-            [clojure.test :refer [deftest is testing]]
+            [kotoba.test :refer [deftest is testing]]
             [kototama.contract :as contract]
             [kototama.tender :as tender]))
 

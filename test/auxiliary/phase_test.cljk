@@ -2,7 +2,7 @@
   "The phase table as executable tests. The single invariant this repo
   cannot regress on: `:recommendation/finalize` must NEVER be a member
   of any phase's `:auto` set."
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [auxiliary.phase :as phase]))
 
 (deftest recommendation-finalize-never-auto-at-any-phase

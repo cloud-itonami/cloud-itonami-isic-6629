@@ -8,7 +8,7 @@
   exercises -- the graph, the governor, the safety kernel, the store --
   is portable `.cljc` and IS covered there."
   (:require [kotoba.lang.text :as str]
-            [clojure.test :refer [deftest is testing]]
+            [kotoba.test :refer [deftest is testing]]
             [auxiliary.render-html :as r]))
 
 (defn- render [] (r/render))

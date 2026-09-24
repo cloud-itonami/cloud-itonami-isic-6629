@@ -13,7 +13,7 @@
   3. governor boundary — the confidence floor boundary and the
      fail-closed treatment of out-of-range confidence, exercised
      through the real `auxiliary.governor/check` façade."
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [auxiliary.governor :as governor]
             [auxiliary.kernels.gate :as gate]))
 
