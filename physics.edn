@@ -1,0 +1,41 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:dev:physics` runs it.
+;;
+;; README "Robotics premise": a cargo and vessel damage-survey robot documents
+;; marine loss for the human average adjuster (ISIC 6629, other activities
+;; auxiliary to insurance). Its physical work: crawling a listing deck to the
+;; damaged hatch, waiting for a flooded hold compartment to drain, and taking a
+;; tensile coupon from wasted hull plate.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isic-6629"
+ :cases
+ [{:id :survey-crawler-on-listing-deck
+   :kind :transport
+   :procedure "survey crawler carries cameras and a thickness gauge across the deck of a vessel listing after the casualty"
+   :params {:mass-kg 45.0 :payload-kg 12.0 :distance-m 60.0 :v-max-mps 0.6 :a-max-mps2 0.4
+            :brake-decel-mps2 1.0 :drive-force-n 300.0 :crr 0.04
+            :cog-height-m 0.30 :payload-cog-height-m 0.50 :support-half-length-m 0.25
+            :max-time-s 3600.0}
+   :sweep {:param :slope-deg :values [0.0 5.0 10.0 15.0 20.0 25.0]}
+   :quantity :min-tipover-margin
+   :limit {:min 0.3 :basis "estimate: keep 30 % of the static tip-over margin in reserve for the vessel's roll on top of its list"}
+   :boundary {:lo 0.0 :hi 35.0}}
+  {:id :flooded-hold-drain
+   :kind :tank-drain
+   :procedure "flooded cargo-hold compartment drains through its opened drain valve before the surveyor can enter"
+   :params {:tank-area-m2 150.0 :h0-m 2.5 :h-target-m 0.10 :cd 0.62 :dt-s 2.0 :max-time-s 604800.0}
+   :sweep {:param :orifice-area-m2 :values [0.005 0.01 0.02 0.04 0.08]}
+   :quantity :time-to-target-s
+   :limit {:max 21600.0 :basis "estimate: survey the hold within one 6-hour port watch of opening the drain"}
+   :boundary {:lo 0.002 :hi 0.2}}
+  {:id :wasted-hull-plate-coupon
+   :kind :material
+   :procedure "tensile coupon cut from corroded hull plate; its section shrinks with wastage and it must still carry Grade A's minimum yield load for the original section"
+   :params {:yield-stress-pa 235.0e6 :hardening-pa 1.0e9 :max-force-n 120000.0}
+   :sweep {:param :area-m2 :values [2.40e-4 2.60e-4 2.80e-4 3.00e-4 3.20e-4]}
+   :quantity :yield-force-n
+   :limit {:min 70500.0 :basis "IACS UR W11: normal-strength hull structural steel minimum yield strength 235 N/mm2, times the as-built 300 mm2 coupon section (25 x 12 mm, estimate)"}
+   :boundary {:lo 2.0e-4 :hi 3.5e-4}}]}
