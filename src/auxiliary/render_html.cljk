@@ -37,8 +37,8 @@
   (see `auxiliary.operation`'s :request-approval node), so anything
   that counted violation-bearing facts would silently count a human's
   refusal as a governor refusal."
-  (:require [clojure.java.io :as io]
-            [clojure.set :as set]
+  (:require [kotoba.io :as io]
+            [kotoba.lang.coll :as set]
             [kotoba.lang.text :as str]
             [jp-go-dds.skin :as dds-skin]
             [langgraph.graph :as g]
@@ -772,9 +772,9 @@ footer{color:var(--muted);font-size:13px;margin-top:28px;border-top:1px solid va
   (let [out (or (first args) default-out)
         {:keys [html db runs holds]} (render)
         f (io/file out)]
-    (when-let [p (.getParentFile f)] (.mkdirs p))
+    (when-let [p (io/parent-file f)] (io/mkdirs p))
     (spit f html)
-    (println "wrote" (.getPath f) (count html) "chars")
+    (println "wrote" (io/path f) (count html) "chars")
     (println "  runs:" (count runs)
              "| hard governor holds:" (count holds)
              "| phase-gate holds:" (count (filter #(has-kind? % :phase-gate-hold) runs))
