@@ -11,6 +11,10 @@
  ;; compat skin for exactly this shape of console markup. Pinned by
  ;; :git/sha so the page is byte-reproducible.
  :deps {
+        ;; kotoba.robotics.process: the process-physics solvers and probe this
+        ;; repo's physics.edn runs on (physical-AI bot, scripts/physical-ai-bots).
+        io.github.kotoba-lang/robotics {:local/root "../../kotoba-lang/robotics"}
+
         ;; kotoba.lang.text, not clojure.string. Pinned as an explicit floor:
         ;; tools.deps takes the NEWEST sha it is shown, so without a floor here
         ;; this repo silently rides whatever a sibling happens to name.
@@ -21,7 +25,27 @@
         {:git/url "https://github.com/kotoba-lang/jp-go-digital-design-system"
          :git/sha "83db99546eabc53613ae826ea41d1533a3c574af"}}
  :aliases
- {;; This alias held an :override-deps entry for the retired coordinate
+ {
+  ;; kbb -M:physics -> the physical-AI bot's measurement: runs physics.edn on
+  ;; kotoba.robotics.process and prints one probe map. Exit 2 = could not measure.
+  :physics {:main-opts ["-m" "kotoba.robotics.process.probe"]}
+  ;; kbb -M:physai-test -> test/'s .cljk on kbb's runner (the bot's test count;
+  ;; a .kotoba vertical's own :test may refuse kbb on purpose).
+  ;; test/'s namespaces minus these, which cannot load on kbb (the full suite stays on :test, fleet JVM gate):
+  ;; - auxiliary.portable-cljs-test-runner: a cljs.main entry (*main-cli-fn*); its tests run here
+  ;; - auxiliary.render-html-test: JVM-only by design (jp-go-dds.skin/dds+skin is #?(:clj) upstream: io/resource)
+  ;; - wasm.apportionment-mismatch-test: JVM-only by design (kototama.tender on the chicory wasm runtime)
+  :physai-test {:extra-paths ["test" "test-physai"]
+                :main-opts ["-m" "cognitect.test-runner"
+                            "-n" "auxiliary.physics-spec-test"
+                            "-n" "auxiliary.facts-test"
+                            "-n" "auxiliary.governor-contract-test"
+                            "-n" "auxiliary.kernels.gate-test"
+                            "-n" "auxiliary.operation-graph-test"
+                            "-n" "auxiliary.phase-test"
+                            "-n" "auxiliary.registry-test"
+                            "-n" "auxiliary.store-contract-test"]}
+;; This alias held an :override-deps entry for the retired coordinate
   ;; io.github.com-junkawasaki/langchain-clj. langgraph declares the same
   ;; library as io.github.kotoba-lang/langchain, so the entry matched no
   ;; node in the resolved tree and never reached the classpath -- verified
