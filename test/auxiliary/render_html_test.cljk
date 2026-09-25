@@ -7,7 +7,7 @@
   `auxiliary.portable-cljs-test-runner`'s namespace list. Everything it
   exercises -- the graph, the governor, the safety kernel, the store --
   is portable `.cljc` and IS covered there."
-  (:require [kotoba.lang.text :as str]
+  (:require [kotoba.lang.error :as kerror] [kotoba.lang.text :as str]
             [kotoba.test :refer [deftest is testing]]
             [auxiliary.render-html :as r]))
 
@@ -38,7 +38,7 @@
             indistinguishable from a broken build"
     (is (pos? (count (:holds (render)))) "satisfiable on the real scenario set")
     (with-redefs [r/scenarios (vec (remove #(#{"S5" "S6" "S8"} (:id %)) @#'r/scenarios))]
-      (is (thrown-with-msg? clojure.lang.ExceptionInfo #"ZERO hard governor holds"
+      (is (thrown-with-msg? kerror/ExceptionInfo #"ZERO hard governor holds"
                             (render))
           "cutting the three refusal scenarios must fail the build"))))
 
@@ -79,7 +79,7 @@
       (is (empty? (:violations f))
           "a phase-gate hold carries no governor violation"))
     (with-redefs [r/scenarios (vec (remove #(#{"S9"} (:id %)) @#'r/scenarios))]
-      (is (thrown-with-msg? clojure.lang.ExceptionInfo #"No phase-gate hold observed"
+      (is (thrown-with-msg? kerror/ExceptionInfo #"No phase-gate hold observed"
                             (render))))))
 
 (deftest deterministic

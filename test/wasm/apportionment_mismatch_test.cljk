@@ -11,7 +11,7 @@
   exported linear memory at fixed offsets before calling main() -- see
   wasm/apportionment_mismatch.kotoba's ns-adjacent header comment for the
   offset layout and the integer-truncation tolerance rationale."
-  (:require [clojure.java.io :as io]
+  (:require [kotoba.io :as io]
             [kotoba.test :refer [deftest is testing]]
             [kototama.contract :as contract]
             [kototama.tender :as tender]))
