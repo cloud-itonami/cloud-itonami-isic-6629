@@ -6,7 +6,7 @@
  ;; inside the monorepo checkout — a standalone fork should override them
  ;; with git coordinates.
  ;; jp-go-digital-design-system (DADS) is this workspace's BASE design
- ;; system (CLAUDE.md, repo-wide mandatory). The build-time operator
+ ;; system (AGENTS.md, repo-wide mandatory). The build-time operator
  ;; console renders on top of it; `jp-go-dds.skin/dds+skin` is the
  ;; compat skin for exactly this shape of console markup. Pinned by
  ;; :git/sha so the page is byte-reproducible.
